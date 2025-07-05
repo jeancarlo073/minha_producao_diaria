@@ -1,0 +1,218 @@
+{# minha_producao_diaria/producao/templates/producao/listar_producoes.html #}
+
+{% extends 'base.html' %} {# Extende o template base #}
+
+{% block title %}Lista de Produções Diárias{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Mantenha apenas os estilos específicos desta página, se houver */
+    h1 {
+        color: #0056b3;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .search-form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .search-form label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+    .search-form input[type="text"] {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .search-form button {
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .search-form button:hover {
+        background-color: #0056b3;
+    }
+
+    .table-container { /* Novo para rolagem horizontal */
+        overflow-x: auto; /* Adiciona rolagem horizontal se o conteúdo for muito largo */
+        -webkit-overflow-scrolling: touch; /* Suaviza a rolagem em dispositivos móveis */
+        margin-top: 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border-radius: 8px; /* Arredonda as bordas da caixa da tabela */
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1200px; /* Garante que a tabela tenha uma largura mínima para rolagem, ajuste conforme necessário */
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+        white-space: nowrap; /* Impede que o texto quebre linha nas células */
+    }
+    th {
+        background-color: #e9ecef;
+        font-weight: bold;
+    }
+    tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+    .nav-links {
+        text-align: center;
+        margin-top: 30px;
+        margin-bottom: 20px; /* Adicionado para espaçamento */
+    }
+    .nav-links a {
+        display: inline-block;
+        margin: 0 10px;
+        padding: 10px 15px;
+        background-color: #28a745;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+    .nav-links a:hover {
+        background-color: #218838;
+    }
+    .nav-links .back-link {
+        background-color: #007bff;
+    }
+    .nav-links .back-link:hover {
+        background-color: #0056b3;
+    }
+    .no-results {
+        text-align: center;
+        padding: 40px;
+        background-color: #fff;
+        margin-top: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Estilo para os botões de ação (Editar/Excluir) na tabela */
+    .action-buttons a {
+        padding: 5px 10px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 0.8em;
+        margin-right: 5px;
+        display: inline-block; /* Para garantir que o margin-right funcione bem */
+    }
+    .action-buttons .edit-button {
+        background-color: #007bff;
+        color: white;
+    }
+    .action-buttons .edit-button:hover {
+        background-color: #0056b3;
+    }
+    /* Vamos adicionar o estilo para o botão de exclusão aqui, para o próximo passo */
+    .action-buttons .delete-button {
+        background-color: #dc3545;
+        color: white;
+        border: none; /* Como será um botão de formulário, removemos a borda padrão */
+        cursor: pointer;
+    }
+    .action-buttons .delete-button:hover {
+        background-color: #c82333;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h1>Produções Diárias Registradas</h1>
+
+    {# Formulário de Pesquisa #}
+    <form method="get" class="search-form">
+        <div>
+            <label for="ciclo_ano">Ciclo/Ano:</label>
+            <input type="text" id="ciclo_ano" name="ciclo_ano" value="{{ filtro_ciclo_ano|default:'' }}">
+        </div>
+        <div>
+            <label for="semana_epidemiologica">Semana Epidemiológica:</label>
+            <input type="text" id="semana_epidemiologica" name="semana_epidemiologica" value="{{ filtro_semana_epidemiologica|default:'' }}">
+        </div>
+        <button type="submit">Pesquisar</button>
+    </form>
+
+    <div class="nav-links">
+        <a href="{% url 'adicionar_producao' %}" class="back-link">Adicionar Nova Produção</a>
+    </div>
+
+    {% if producoes %}
+        <div class="table-container"> {# Envolve a tabela para rolagem #}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Bairro</th>
+                        <th>Ciclo/Ano</th>
+                        <th>Responsável</th>
+                        <th>N° Quarteirão</th>
+                        <th>Semana Epidemiológica</th>
+                        <th>Residência</th>
+                        <th>Comércio</th>
+                        <th>Terreno Baldio</th>
+                        <th>Ponto Estratégico</th>
+                        <th>Outros</th>
+                        <th>Total de Imóveis Abertos</th>
+                        <th>Eliminados</th>
+                        <th>Recusas</th>
+                        <th>Fechados</th> {# <-- ORDEM CORRIGIDA #}
+                        <th>Recuperados</th> {# <-- ORDEM CORRIGIDA #}
+                        <th>Ações</th> {# <-- Coluna Ações #}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prod in producoes %}
+                        <tr>
+                            <td>{{ prod.data|date:"d/m/Y" }}</td>
+                            <td>{{ prod.bairro }}</td>
+                            <td>{{ prod.ciclo_ano }}</td>
+                            <td>{{ prod.nome_responsavel }}</td>
+                            <td>{{ prod.numero_quarteirao }}</td>
+                            <td>{{ prod.semana_epidemiologica }}</td>
+                            <td>{{ prod.residencia }}</td>
+                            <td>{{ prod.comercio }}</td>
+                            <td>{{ prod.terreno_baldios }}</td>
+                            <td>{{ prod.ponto_estrategico }}</td>
+                            <td>{{ prod.outros }}</td>
+                            <td>{{ prod.total_imoveis_abertos }}</td>
+                            <td>{{ prod.eliminados }}</td>
+                            <td>{{ prod.recusas }}</td>
+                            <td>{{ prod.fechados }}</td>    {# <-- ORDEM MANTIDA, CORRESPONDENDO AO HEAD #}
+                            <td>{{ prod.recuperados }}</td> {# <-- ORDEM MANTIDA, CORRESPONDENDO AO HEAD #}
+                            <td class="action-buttons">
+                                <a href="{% url 'editar_producao' pk=prod.pk %}" class="edit-button">Editar</a>
+                                {# Botão de Excluir que leva para a página de confirmação #}
+                                <a href="{% url 'excluir_producao' pk=prod.pk %}" class="delete-button" onclick="return confirm('Tem certeza que deseja excluir esta produção? Esta ação não pode ser desfeita.');">Excluir</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div> {# Fim de .table-container #}
+    {% else %}
+        <p class="no-results">Nenhuma produção diária encontrada com os filtros aplicados.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{# minha_producao_diaria/producao/templates/producao/pagina_inicial.html #}
+
+{% extends 'base.html' %} {# Extende o template base #}
+
+{% block title %}Bem-vindo!{% endblock %}
+
+{% block content %}
+    <div style="text-align: center; margin-top: 50px;">
+        <h2>Bem-vindo ao Sistema de Produção Diária!</h2>
+        <p>Por favor, faça login para acessar as funcionalidades do sistema.</p>
+        {% if not user.is_authenticated %}
+            <p><a href="{% url 'login' %}" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Acessar Login</a></p>
+        {% else %}
+            <p>Você está logado como **{{ user.username }}**.</p>
+            <p>
+                <a href="{% url 'adicionar_producao' %}" style="padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px;">Adicionar Produção</a>
+                <a href="{% url 'listar_producoes' %}" style="padding: 10px 20px; background-color: #17a2b8; color: white; text-decoration: none; border-radius: 5px;">Listar Produções</a>
+            </p>
+        {% endif %}
+    </div>
+{% endblock %}

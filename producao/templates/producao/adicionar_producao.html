@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Produção Diária</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            color: #0056b3;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        form {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px; /* Largura maior para acomodar mais campos lado a lado */
+            margin: 20px auto;
+            display: grid; /* Usar grid para melhor layout */
+            gap: 15px; /* Espaço entre os itens do grid */
+        }
+        .field-row {
+            display: flex;
+            flex-wrap: wrap; /* Permite quebrar linha em telas menores */
+            gap: 20px; /* Espaço entre os campos na mesma linha */
+            align-items: flex-end; /* Alinha labels e inputs na base */
+        }
+        .field-group {
+            flex: 1; /* Permite que os grupos de campos cresçam */
+            min-width: 150px; /* Largura mínima para cada campo */
+        }
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        form input[type="text"],
+        form input[type="number"],
+        form input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        /* Estilos para os botões */
+        .button-row {
+            display: flex;
+            justify-content: center; /* Centraliza os botões */
+            gap: 20px; /* Espaço entre os botões */
+            margin-top: 30px;
+        }
+        .button-row button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        .button-row button:hover {
+            background-color: #0056b3;
+        }
+        .button-row .secondary-button { /* Estilo para Limpar e Pesquisar */
+            background-color: #6c757d; /* Cor cinza para botões secundários */
+        }
+        .button-row .secondary-button:hover {
+            background-color: #5a6268;
+        }
+
+        /* Estilos para as mensagens */
+        .messages {
+            list-style: none;
+            padding: 10px 20px;
+            margin: 10px auto; /* Centraliza as mensagens */
+            border-radius: 5px;
+            max-width: 800px; /* Mesma largura do formulário para alinhamento */
+            box-sizing: border-box; /* Garante que padding não aumente a largura total */
+        }
+        .messages li {
+            margin-bottom: 5px;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .messages .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .messages .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .messages .warning { /* Adicionado para exemplo */
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        .messages .info { /* Adicionado para exemplo */
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Sistema de Salvamento de Produção</h1>
+
+    {# Adicionar mensagens do Django aqui (FORA DO FORMULÁRIO para melhor posicionamento) #}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %} {# MUITO IMPORTANTE: Token de segurança do Django #}
+
+        {# Linha 1 da interface: Bairro, Data, Ciclo/Ano #}
+        <div class="field-row">
+            <div class="field-group">{{ form.bairro.label_tag }} {{ form.bairro }} {{ form.bairro.errors }}</div>
+            <div class="field-group">{{ form.data.label_tag }} {{ form.data }} {{ form.data.errors }}</div>
+            <div class="field-group">{{ form.ciclo_ano.label_tag }} {{ form.ciclo_ano }} {{ form.ciclo_ano.errors }}</div>
+        </div>
+
+        {# Linha 2 da interface: Nome, Número, N° do Quarteirão #}
+        <div class="field-row">
+            <div class="field-group">{{ form.nome_responsavel.label_tag }} {{ form.nome_responsavel }} {{ form.nome_responsavel.errors }}</div>
+            <div class="field-group">{{ form.numero_identificacao.label_tag }} {{ form.numero_identificacao }} {{ form.numero_identificacao.errors }}</div>
+            <div class="field-group">{{ form.numero_quarteirao.label_tag }} {{ form.numero_quarteirao }} {{ form.numero_quarteirao.errors }}</div>
+        </div>
+
+        {# Linha 3 da interface: Semana Epidemiológica #}
+        <div class="field-row">
+            <div class="field-group">{{ form.semana_epidemiologica.label_tag }} {{ form.semana_epidemiologica }} {{ form.semana_epidemiologica.errors }}</div>
+        </div>
+
+        {# Linha 4 da interface: Produção (Residencia, Comercio, etc.) #}
+        <h2>Produção de Imóveis</h2>
+        <div class="field-row">
+            <div class="field-group">{{ form.residencia.label_tag }} {{ form.residencia }} {{ form.residencia.errors }}</div>
+            <div class="field-group">{{ form.comercio.label_tag }} {{ form.comercio }} {{ form.comercio.errors }}</div>
+            <div class="field-group">{{ form.terreno_baldios.label_tag }} {{ form.terreno_baldios }} {{ form.terreno_baldios.errors }}</div>
+            <div class="field-group">{{ form.ponto_estrategico.label_tag }} {{ form.ponto_estrategico }} {{ form.ponto_estrategico.errors }}</div>
+            <div class="field-group">{{ form.outros.label_tag }} {{ form.outros }} {{ form.outros.errors }}</div>
+        </div>
+
+        {# Linha do Total de Imoveis Abertos (READONLY no formulário, calculado via JS) #}
+        <div class="field-row">
+            <div class="field-group">
+                <label for="id_total_imoveis_abertos">Total de Imóveis Abertos:</label>
+                <input type="number" id="id_total_imoveis_abertos" value="0" readonly style="background-color: #e9ecef; cursor: not-allowed;">
+            </div>
+        </div>
+
+        {# Linha dos Resultados: Eliminados, Recusas, Fechados, Recuperados #}
+        <h2>Resultados</h2>
+        <div class="field-row">
+            <div class="field-group">{{ form.eliminados.label_tag }} {{ form.eliminados }} {{ form.eliminados.errors }}</div>
+            <div class="field-group">{{ form.recusas.label_tag }} {{ form.recusas }} {{ form.recusas.errors }}</div>
+            <div class="field-group">{{ form.fechados.label_tag }} {{ form.fechados }} {{ form.fechados.errors }}</div>
+            <div class="field-group">{{ form.recuperados.label_tag }} {{ form.recuperados }} {{ form.recuperados.errors }}</div>
+        </div>
+
+        {# Botões #}
+        <div class="button-row">
+            <button type="button" id="limparCamposBtn" class="secondary-button">Limpar Campos</button>
+            <button type="submit">Salvar no Banco</button>
+            <button type="button" id="pesquisarBtn" class="secondary-button">Pesquisar</button>
+        </div>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Seleciona todos os campos de input do formulário (exceto o total_imoveis_abertos)
+            const formInputs = document.querySelectorAll(
+                '#id_bairro, #id_data, #id_ciclo_ano, ' +
+                '#id_nome_responsavel, #id_numero_identificacao, #id_numero_quarteirao, ' +
+                '#id_semana_epidemiologica, ' +
+                '#id_residencia, #id_comercio, #id_terreno_baldios, #id_ponto_estrategico, #id_outros, ' +
+                '#id_eliminados, #id_recusas, #id_fechados, #id_recuperados'
+            );
+
+            // Campos específicos para o cálculo do total
+            const residenciaInput = document.getElementById('id_residencia');
+            const comercioInput = document.getElementById('id_comercio');
+            const terrenoBaldiosInput = document.getElementById('id_terreno_baldios');
+            const pontoEstrategicoInput = document.getElementById('id_ponto_estrategico');
+            const outrosInput = document.getElementById('id_outros');
+            const totalImoveisAbertosInput = document.getElementById('id_total_imoveis_abertos');
+
+            // Botões
+            const limparCamposBtn = document.getElementById('limparCamposBtn');
+            const pesquisarBtn = document.getElementById('pesquisarBtn');
+
+            function calcularTotal() {
+                let total = 0;
+                total += parseInt(residenciaInput.value) || 0;
+                total += parseInt(comercioInput.value) || 0;
+                total += parseInt(terrenoBaldiosInput.value) || 0;
+                total += parseInt(pontoEstrategicoInput.value) || 0;
+                total += parseInt(outrosInput.value) || 0;
+                totalImoveisAbertosInput.value = total;
+            }
+
+            function limparCampos() {
+                formInputs.forEach(input => {
+                    if (input.type === 'number') {
+                        input.value = '0'; // Define campos numéricos para 0
+                    } else if (input.type === 'date') {
+                        input.value = ''; // Limpa campos de data
+                    } else {
+                        input.value = ''; // Limpa campos de texto
+                    }
+                });
+                calcularTotal(); // Recalcula o total após limpar (deve ser 0)
+            }
+
+            // Adiciona listeners para cada campo de produção para o cálculo automático
+            residenciaInput.addEventListener('input', calcularTotal);
+            comercioInput.addEventListener('input', calcularTotal);
+            terrenoBaldiosInput.addEventListener('input', calcularTotal);
+            pontoEstrategicoInput.addEventListener('input', calcularTotal);
+            outrosInput.addEventListener('input', calcularTotal);
+
+            // Adiciona listener para o botão Limpar Campos
+            limparCamposBtn.addEventListener('click', limparCampos);
+
+            // Adiciona listener para o botão Pesquisar
+            // NOTE: A URL 'listar_producoes' ainda não existe e será criada no próximo grande passo.
+            // Por enquanto, esta linha causará um erro "Reverse for 'listar_producoes' not found." se clicado antes.
+            pesquisarBtn.addEventListener('click', function() {
+                window.location.href = '{% url "listar_producoes" %}';
+            });
+
+            // Chama a função uma vez ao carregar a página para definir o valor inicial
+            calcularTotal();
+        });
+    </script>
+</body>
+</html>

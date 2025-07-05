@@ -1,0 +1,113 @@
+{# minha_producao_diaria/producao/templates/producao/register.html #}
+
+{% extends 'base.html' %} {# Extende o template base #}
+
+{% block title %}Cadastro de Usuário{% endblock %}
+
+{% block extra_head %}
+<style>
+    .register-container {
+        background-color: #fff;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: 50px auto;
+        text-align: center;
+    }
+    .register-container h1 {
+        color: #007bff;
+        margin-bottom: 30px;
+        font-size: 2em;
+    }
+    .register-container form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .register-container label {
+        text-align: left;
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+    .register-container input[type="text"],
+    .register-container input[type="password"],
+    .register-container input[type="email"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box; /* Garante que padding não aumente a largura */
+    }
+    .register-container button {
+        padding: 12px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.1em;
+        font-weight: bold;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+    }
+    .register-container button:hover {
+        background-color: #218838;
+    }
+    .register-container .messages {
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+    }
+    .register-container .messages li.success {
+        color: green;
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+    .register-container .messages li.error {
+        color: #dc3545;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+    .register-container p.login-link {
+        margin-top: 20px;
+    }
+    .register-container p.login-link a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .register-container p.login-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <h1>Criar Nova Conta</h1>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %}class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }} {# Renderiza os campos do formulário como parágrafos #}
+        <button type="submit">Registrar</button>
+    </form>
+
+    <p class="login-link">Já tem uma conta? <a href="{% url 'login' %}">Faça login aqui</a>.</p>
+</div>
+{% endblock %}

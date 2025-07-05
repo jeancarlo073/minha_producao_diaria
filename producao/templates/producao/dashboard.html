@@ -1,0 +1,69 @@
+{# minha_producao_diaria/producao/templates/producao/dashboard.html #}
+
+{% extends 'base.html' %} {# Extende o template base #}
+
+{% block title %}Dashboard da Produção Diária{% endblock %}
+
+{% block extra_head %}
+<style>
+    .dashboard-container {
+        background-color: #fff;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 50px auto;
+        text-align: center;
+    }
+    .dashboard-container h1 {
+        color: #0056b3;
+        margin-bottom: 30px;
+        font-size: 2.2em;
+    }
+    .dashboard-options {
+        display: flex;
+        flex-direction: column; /* Para empilhar os botões verticalmente */
+        gap: 20px; /* Espaçamento entre os botões */
+        margin-top: 30px;
+    }
+    .dashboard-options a {
+        display: block; /* Para ocupar a largura total e permitir margin auto */
+        padding: 15px 30px;
+        background-color: #007bff; /* Cor primária */
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 1.2em;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); /* Sombra mais destacada */
+    }
+    .dashboard-options a:hover {
+        background-color: #0056b3; /* Tom mais escuro no hover */
+        transform: translateY(-2px); /* Efeito de "levantar" */
+    }
+    .dashboard-options a.add-new {
+        background-color: #28a745; /* Cor para "Novo Registro" */
+        box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+    }
+    .dashboard-options a.add-new:hover {
+        background-color: #218838;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1>Bem-vindo ao Sistema de Produção Diária!</h1>
+    <p>Escolha uma opção abaixo para começar:</p>
+
+    <div class="dashboard-options">
+        <a href="{% url 'adicionar_producao' %}" class="add-new">
+            Novo Registro de Produção
+        </a>
+        <a href="{% url 'listar_producoes' %}">
+            Listar Produções Registradas
+        </a>
+    </div>
+</div>
+{% endblock %}

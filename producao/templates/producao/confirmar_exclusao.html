@@ -1,0 +1,72 @@
+{# minha_producao_diaria/producao/templates/producao/confirmar_exclusao.html #}
+
+{% extends 'base.html' %} {# Extende o template base #}
+
+{% block title %}Confirmar Exclusão{% endblock %}
+
+{% block content %}
+<style>
+    .confirmation-container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: 50px auto;
+        text-align: center;
+    }
+    .confirmation-container h2 {
+        color: #dc3545;
+        margin-bottom: 20px;
+    }
+    .confirmation-container p {
+        margin-bottom: 30px;
+        font-size: 1.1em;
+        line-height: 1.5;
+    }
+    .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+    .button-group button {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .button-group .confirm-delete-button {
+        background-color: #dc3545;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+    .button-group .confirm-delete-button:hover {
+        background-color: #c82333;
+    }
+    .button-group .cancel-button {
+        background-color: #6c757d;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+    .button-group .cancel-button:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+<div class="confirmation-container">
+    <h2>Confirmar Exclusão</h2>
+    <p>Você tem certeza que deseja excluir a produção da data **{{ producao.data|date:"d/m/Y" }}** no bairro **{{ producao.bairro }}**?</p>
+    <p>Esta ação não pode ser desfeita.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="button-group">
+            <button type="submit" class="confirm-delete-button">Sim, Excluir</button>
+            <button type="button" class="cancel-button" onclick="window.history.back();">Cancelar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

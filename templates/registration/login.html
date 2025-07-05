@@ -1,0 +1,116 @@
+{# minha_producao_diaria/templates/registration/login.html #}
+
+{% extends 'base.html' %} {# Extende o seu template base #}
+
+{% block title %}Login{% endblock %}
+
+{% block extra_head %}
+<style>
+    .login-container {
+        background-color: #fff;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        margin: 50px auto;
+        text-align: center;
+    }
+    .login-container h1 {
+        color: #007bff;
+        margin-bottom: 30px;
+        font-size: 2em;
+    }
+    .login-container form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .login-container label {
+        text-align: left;
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+    .login-container input[type="text"],
+    .login-container input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .login-container button[type="submit"] {
+        padding: 12px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.1em;
+        font-weight: bold;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+    }
+    .login-container button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+    .login-container p.register-link {
+        margin-top: 20px;
+    }
+    .login-container p.register-link a {
+        color: #28a745; /* Cor para o link de registro */
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .login-container p.register-link a:hover {
+        text-decoration: underline;
+    }
+    .login-container .errorlist {
+        color: red;
+        list-style-type: none;
+        padding: 0;
+        margin-top: -10px;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+    .login-container .errorlist li {
+        font-size: 0.9em;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <h1>Login</h1>
+
+    {% if form.errors %}
+        <ul class="errorlist">
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>
+                        {% if field != '__all__' %}
+                            {{ field|capfirst }}:
+                        {% endif %}
+                        {{ error }}
+                    </li>
+                {% endfor %}
+            {% endfor %}
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    {% endif %}
+
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        {{ form.as_p }} {# Renderiza campos de usuário e senha #}
+        <button type="submit">Entrar</button>
+        <input type="hidden" name="next" value="{{ next }}"> {# Mantém o redirecionamento #}
+    </form>
+
+    <p class="register-link">Não tem uma conta? <a href="{% url 'register' %}">Crie uma aqui</a>.</p>
+    <p class="password-reset-link"><a href="{% url 'password_reset' %}">Esqueceu sua senha?</a></p>
+</div>
+{% endblock %}

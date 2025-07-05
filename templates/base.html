@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Minha Produção Diária{% endblock %}</title>
+    {# Carrega a tag 'static' para usar arquivos estáticos #}
+    {% load static %} 
+    {# Link para o seu arquivo CSS externo #}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> 
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header>
+        <nav class="header-bar"> {# Aplicando a classe do CSS aqui #}
+            <a href="{% url 'home' %}" class="logo">Minha Produção Diária</a>
+            <div class="nav-links">
+                {% if user.is_authenticated %}
+                    <span class="user-info">Olá, {{ user.username }}!</span> {# Aplicando classe user-info #}
+                    <a href="{% url 'listar_producoes' %}">Minhas Produções</a>
+                    <a href="{% url 'adicionar_producao' %}">Adicionar Produção</a>
+                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-logout">Sair</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'register' %}">Registrar</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+    <footer>
+        <p>&copy; {% now "Y" %} Minha Produção Diária. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>
