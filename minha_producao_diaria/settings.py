@@ -10,12 +10,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-sua_chave_secreta_aqui_gerada_automaticamente' # Será diferente para você
+# Será diferente para você
+SECRET_KEY = 'django-insecure-sua_chave_secreta_aqui_gerada_automaticamente'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =False
+DEBUG = False
 
-ALLOWED_HOSTS = ['JeanCarlo.pythonanywhere.com', '127.0.0.1', 'localhost'] # Adicionado para desenvolvimento local
+ALLOWED_HOSTS = ['JeanCarlo.pythonanywhere.com', '127.0.0.1',
+                 'localhost']  # Adicionado para desenvolvimento local
 
 
 # Application definition
@@ -29,7 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Meus apps
     'producao',
-     'usuarios',
+    'usuarios',
 ]
 
 MIDDLEWARE = [
@@ -105,9 +107,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'pt-br' # Alterado para português do Brasil
+LANGUAGE_CODE = 'pt-br'  # Alterado para português do Brasil
 
-TIME_ZONE = 'America/Sao_Paulo' # Alterado para fuso horário de São Paulo
+TIME_ZONE = 'America/Sao_Paulo'  # Alterado para fuso horário de São Paulo
 
 USE_I18N = True
 
@@ -137,4 +139,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Configurações de autenticação (Adicione estas 3 linhas no final do arquivo)
 LOGIN_REDIRECT_URL = '/'  # Mantemos esta para redirecionar para a home após o login
 LOGIN_URL = '/accounts/login/'
-LOGOUT_REDIRECT_URL = '/accounts/login/' # <--- Certifique-se que esta linha esteja assim!
+# <--- Certifique-se que esta linha esteja assim!
+LOGOUT_REDIRECT_URL = '/accounts/login/'
